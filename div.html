@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang='it'>
+    <head>
+        <meta charset='UTF-8'>
+        <!-- ./favicon -->
+        <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" sizes="16x16">
+        <title>Position | Div</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link type="text/css" rel="stylesheet" href="./css/sty.css">
+        <style type="text/css">
+            * {
+                font-family: 'Courier New', Courier, monospace;
+            }
+            .fi-fullscreen {
+                position: absolute; left:0; top:0;
+                width: 100vw;
+                height: 100vh;
+                background-color: var(--fullscreen);
+                display: none;
+                z-index: 100;
+            }
+            .fi-alert {
+                position: absolute; left: 50%; top: -50%;
+                border-radius: 4px;
+                transform: translate(-50%, -50%);
+                background-color: var(--darkorchid);
+                width: 30%;
+                height: 15%;
+                z-index: 101;
+            }
+            .fi-alert-close {
+                transition: 0.5s;
+                position: absolute; left: 0.5%; top: 0;
+                margin: 2px 2px 0 0;
+                background-image: url('./images/close.png');
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 16px;
+                z-index: 103;
+                height: 17px;
+                width: 17px;
+                border-radius: 100%;
+                border: 1px solid var(--dark);
+                box-shadow: 0 3px 9px var(--dark);
+            }
+            .fi-alert-close:hover {
+                transition: 0.5s;
+                box-shadow: 0 0 0;
+            }
+            .fi-alert-header {
+                position: absolute; left:0; top:0; right:0;
+                background-color: var(--floralwhite);
+                border-radius: 4px 4px 0 0;
+                height: 35%;
+                z-index: 102;
+            }
+            .fi-alert-body {
+                position: absolute; left: 0; top: 35%; right: 0;
+                height: 65%;
+                border-radius: 0 0 4px 4px;
+                padding: 4px;
+                z-index: 104;
+                color: var(--dark);
+                overflow: auto;
+            }
+            .fi-wrapper {
+                position:absolute; left: 0.5vw; top:0.5vh;
+                border: 1px solid var(--dark);
+                border-radius: 4px;
+                width: 99vw;
+                height: 99vh;
+                background-color: var(--floralwhite);
+                overflow: auto;
+                z-index: 6;
+                box-shadow: 0 3px 9px var(--dark);
+            }
+            .fi-wrapper .fi-panel-header {
+                position: absolute; left: 0; top: 0; right:0;
+                background-color: var(--info);
+                text-align: center;
+                color: var(--floralwhite);
+                border-radius: 4px 4px 0 0;
+                height: 10vh;
+                z-index: 3;
+            }
+            .fi-wrapper .fi-panel-body {
+                position: absolute; left: 0; top: 10vh; right:0;
+                background-color: var(--dark);
+                color: var(--floralwhite);
+                height: 79vh;
+                overflow: auto;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+                padding: 4px;
+                z-index: 2;
+            }
+            .fi-wrapper .fi-panel-footer {
+                position: absolute; left:0; top: 89vh; right: 0;
+                background-color: var(--dark);
+                height: 10vh;
+                text-align: center;
+                color: var(--floralwhite);
+                border-radius: 0 0 4px 4px;
+                z-index: 1;
+            }
+            .fi-wrapper .fi-panel-body button {
+                background-color: transparent;
+                background-color: var(--floralwhite);
+                border: 1px solid var(--dark);
+                border-radius: 4px;
+                height: 40px;
+                width: 120px;
+                padding-left: 20px;
+            }
+            .fi-button-background {
+                background-repeat: no-repeat;
+                background-position: 4px center;
+                background-size: 18px;
+            }
+            .fi-wrapper .fi-panel-body .fi-btn-info {
+                background-image: url('./images/info.png');
+            }
+            .fi-wrapper .fi-panel-body .fi-btn-success {
+                background-image: url('./images/success.png');
+            }
+            .fi-wrapper .fi-panel-body .fi-btn-warning {
+                background-image: url('./images/warning.png');
+            }
+            .fi-wrapper .fi-panel-body .fi-btn-save {
+                background-image: url('images/brm_racing_car_18613.png');
+            }
+            .fi-wrapper .fi-panel-body .fi-show-msg {
+                background-image: url('images/fire_chief_car_18597.png');
+            }
+            .fi-animation {
+                animation-name: rotation;
+                animation-duration: 1s;
+                animation-timing-function: linear;
+            }
+            @keyframes rotation {
+                0% {transform: rotate(0deg)}
+                25% {transform: rotate(90deg)}
+                50% {transform: rotate(180deg)}
+                75% {transform: rotate(240deg)}
+                100% {transform: rotate(360deg)}
+            }
+            /* portrait iPhon and iPad */
+            @media only screen and (max-device-width: 860px) and (orientation: portrait) {
+                .fi-wrapper .fi-panel-body {
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                }
+                .fi-wrapper .fi-panel-body button {
+                    width: 100%;
+                }
+                .fi-wrapper .fi-panel-footer {
+                    height: 11vh;
+                }
+                .fi-alert {
+                    width: 80%;
+                    height: 10%;
+                }
+                .fi-alert-header {
+                    height: 55%;
+                }
+                .fi-alert-body {
+                    position: absolute; top: 55%;
+                    height: 45%;
+                }
+            }
+            /* landscape only iPhone */
+            @media only screen and (max-device-width: 860px) and (orientation: landscape) {
+                .fi-wrapper .fi-panel-header {
+                    height: 20vh;
+                }
+                .fi-wrapper .fi-panel-footer {
+                    height: 25vh;
+                }
+                .fi-wrapper .fi-panel-body {
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    position: absolute; top: 20vh;
+                    height: 69vh;
+                }
+                .fi-wrapper .fi-panel-body button {
+                    width: 100%;
+                }
+                .fi-alert {
+                    width: 80%;
+                    height: 50%;
+                }
+                .fi-alert-header {
+                    height: 70%;
+                }
+                .fi-alert-body {
+                    position: absolute; top: 70%;
+                    height: 50%;
+                }
+            }
+            /* landscape only iPad */
+            @media only screen and (max-device-width: 1080px) and (orientation: landscape) { 
+                .fi-alert {
+                    width: 80%;
+                    height: 20%;
+                }
+                .fi-wrapper .fi-panel-footer {
+                    height: 11vh;
+                }
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type='module' src="js/script.js" defer></script>
+    </head>
+    <body>
+        <div class="fi-fullscreen"></div>
+        <div class="fi-alert">
+            <div class="fi-alert-close fi-crs-pointer"></div>
+            <div class="fi-alert-header"></div>
+            <div class="fi-alert-body"></div>
+        </div>
+        <div class="fi-wrapper">
+        <div class="fi-panel-header"><h1>Div | Position</h1></div>
+        <div class="fi-panel-body">
+            <div class="cls">
+                <button class="fi-btn fi-btn-save fi-button-background fi-crs-pointer">Mostra messaggio</button>
+            </div>
+            <div class="cls">
+                <button class="fi-btn fi-show-msg fi-button-background fi-crs-pointer">Mostra messaggio</button>
+            </div>
+            <div class="cls">
+                <button class="fi-btn fi-alert-message fi-btn-info fi-button-background fi-crs-pointer">Alert Info</button>
+            </div>
+            <div class="cls">
+                <button class="fi-btn fi-alert-message fi-btn-success fi-button-background fi-crs-pointer">Alert Success</button>
+            </div>
+            <div class="cls">
+                <button class="fi-btn fi-alert-message fi-btn-warning fi-button-background fi-crs-pointer">Alert Warning</button>
+            </div>
+        </div><!-- ./fi-panel-body -->
+        <div class="fi-panel-footer"></div><!-- ./fi-footer -->
+        </div><!-- ./fi-wrapper -->
+        <!--
+            <script type="module" defer>
+                // Funziona tutto perfettamente
+                import {msgSuccess, msgDanger, fnc, CLS, stampa} from './js/module.js';
+                let div = document.querySelector('.fi-wrapper');
+                div.addEventListener('click', function() {
+                    msgSuccess("AVVISO", "Questo è un messaggio di prova :-D");
+                });
+            </script>
+        -->
+    </body>
+</html>
