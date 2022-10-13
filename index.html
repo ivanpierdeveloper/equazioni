@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<htm lang="it">
+    <head>
+        <meta charset="utf-8">
+        <!-- favicon -->
+		<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" sizes="16x16">
+        <title>Home | iVanpier</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            :root {
+                --fi-dark: #343a40;
+                --fi-floralwhite: rgb(255,250,240);
+                --fi-white: rgb(255, 255, 255);
+                --fi-utility: #2980b9;
+                --fi-metanonord: #27ae60;
+                --fi-az-0: #80b7ff;
+                --fi-az-1: #b3d4ff;
+                --fi-graylight: rgb(105, 105, 105);
+            }
+            * {
+                margin: 0;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 11pt;
+            }
+            .fi-tooltip {
+                position: relative;
+                /*display: inline-block;*/
+                /*border-bottom: 1px dotted var(--fi-dark);*/
+            }
+            .fi-tooltip .fi-tooltiptext {
+                visibility: hidden;
+                width: 50%; /*120px*/
+                background-color: var(--fi-dark);
+                color: var(--fi-floralwhite);
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px;
+                /*Position the tooltip*/
+                position: absolute; left: 25%; bottom: 104%; /*left:0 bottom:0*/
+                z-index: 1;
+            }
+            .fi-tooltip:hover .fi-tooltiptext {
+                visibility: visible;
+            }
+            .full-screen {
+                transition: 2s;
+                position: fixed; left:0; top:0;
+                width: 100%;
+                height: 100%;
+                z-index: 999;
+                background-color: #343a40;
+                opacity: 0.5;
+                display: none;
+            }
+            .my-alert {
+                position: fixed; left: 50%; top:-50%;
+                transform: translate(-50%, -50%);
+                width: 500px;
+                height: 250px;
+                background-color: rgb(255, 255, 240);
+                border: 1px solid #343a40;
+                border-radius: 4px;
+                box-shadow: 0 3px 9px #343a40;
+                display: none;
+                transition: 2s;
+                z-index: 10000;
+                cursor: pointer;
+            }
+            .panel-header, .panel-footer {
+                position: relative; left: 0; top:0;
+                width: 100%;
+                height: 25%;
+                text-align: center;
+                line-height: 60px;
+                color: var(--fi-dark);
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 14pt; font-weight: bold;
+                text-transform: uppercase;
+            }
+            .panel-header {
+                border-radius: 4px 4px 0 0;
+            }
+            .panel-footer {
+                border-radius: 0 0 4px 4px;
+            }
+            .panel-success {
+                background-color: rgb(143, 188, 143);
+            }
+            .panel-info {
+                background-color: rgb(143, 171, 188);
+            }
+            .panel-primary {
+                background-color: rgb(171, 81, 231);
+            }
+            .panel-warning {
+                background-color: rgb(235, 159, 18);
+            }
+            .panel-danger {
+                background-color: rgb(205, 92, 92);
+            }
+            .panel-body {
+                width: 98%;
+                height: 45%;
+                padding: 1%;
+                border-top: 1px solid #343a40; border-bottom: 1px solid #343a40;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 10pt;
+                text-align: justify;
+                word-wrap: break-word;
+                overflow: auto;
+                background-color: /*rgb(105,105, 105);*/ var(--fi-dark);
+                color: goldenrod;
+            }
+            .wrapper {
+                position: relative;
+                margin-left: auto;
+                margin-right: auto;
+                border: 1px solid rgb(105, 105, 105);
+                height: 99.7vh;
+                width: 99.8vw;
+                border-radius: 4px;
+                overflow: auto;
+            }
+            h3 {
+                text-transform: uppercase;
+                text-align: center;
+                background-color: #27ae60;
+                color: rgb(255,250,240);
+                height: 40px;
+                line-height: 40px;
+            }
+            .grid-container {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 8px;
+            }
+            label {
+                color: rgb(105, 105, 105);
+                text-transform: uppercase;
+                display: block;
+            }
+            input {
+                width: 80%;
+                height: 35px;
+                position: relative; left: 1%;
+                font-size: 11pt;
+                padding-left: 34px;
+                border: 1px solid rgb(105, 105, 105);
+                border-radius: 4px;
+                transition: 1s;
+                background-position: left center;
+            }
+            input:focus {
+                background-color: cornflowerblue;
+                color: var(--fi-floralwhite);
+                transition: 1s;
+            }
+            .crs-pointer {
+                cursor: pointer;
+            }
+            button {
+                background-color: transparent;
+                height: 39px;
+                width: 20%;
+                position: relative; left: 25%;
+                border: 1px solid rgb(105, 105, 105);
+                border-radius: 4px;
+                box-shadow: 0 3px 9px rgb(105, 105, 105);
+                font-size: 11pt;
+                transition: 1s;
+            }
+            select {
+                background-color: transparent;
+                height: 39px;
+                width: 85%;
+                position: relative; left: 1%;
+                border: 1px solid var(--fi-graylight);
+                border-radius: 4px;
+                background-position: left center;
+                padding-left: 34px;
+            }
+            .btn-calcola:hover, .btn-ripristina:hover {
+                box-shadow: 0 0 0;
+                color: rgb(255,250,240);
+                transform: 1s;
+                position: relative; left: 1%;
+                width: 98%
+            }
+            .btn.btn-calcola {
+                background-image: url('images/calc1_43473.png');
+                background-repeat: no-repeat;
+                background-size: 32px;
+            }
+            .btn-calcola {
+                background-position: center center;
+            }
+            .btn-ripristina {
+                background-image: url('images/clear.png');
+                background-repeat: no-repeat;
+                background-size: 32px;
+            }
+            .btn-ripristina {
+                background-position: center center;
+            }
+            .btn-calcola:hover {
+                background-color: #27ae60;
+            }
+            .btn-ripristina:hover {
+                background-color: var(--fi-utility);
+            }
+            input[type=number] {
+                background-image: url('images/number.png');
+                background-repeat: no-repeat;
+                background-size: 32px;
+            }
+            select {
+                background-image: url('images/text.png');
+                background-repeat: no-repeat;
+                background-size: 32px;
+            }
+            .result, .didascalia {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                margin-top: 8px;
+                border-top: 1px solid var(--fi-dark);
+                padding: 4px;
+            }
+            /* iPhone */
+            @media only screen and (max-device-width: 800px) and (orientation: portrait) {
+                .my-alert { 
+                    width: 90vw;
+                    height: 180px;
+                }
+                .grid-container, .didascalia {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+                select {
+                    width: 96vw;
+                }
+                input[type=number] {
+                    width: 86vw !important;
+                }
+            }
+            /* iPad */
+            @media only screen and (min-device-width: 810px) and (orientation: portrait) {
+                .grid-container, .didascalia {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+                select {
+                    width: 98vw;
+                }
+                input[type=number] {
+                    width: 93.5vw !important;
+                }
+            }
+            /* iPhone */
+            @media only screen and (max-device-height: 400px) and (orientation: landscape) {
+                .grid-container, .didascalia {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+                select {
+                    width: 98vw;
+                }
+                input[type=number] {
+                    width: 93.5vw !important;
+                }
+            }
+            @media only screen
+            and (min-device-width: 834px)
+            and (max-device-width: 1112px)
+            and (-webkit-min-device-pixel-ratio: 2) {
+
+            }
+        </style>
+    </head>
+    <body>
+        <div class="full-screen"></div>
+        <div class="my-alert fi-tooltip"><span class="fi-tooltiptext">Clicca per chiudere</span></div>
+        <!-- div grid-->
+        <div class="wrapper">
+            <h3>Equazioni</h3>
+            <div class="grid-container">
+                <div class="cls cls-0">
+                    <label>Valore 1</label>
+                    <input type="number" class="input-val-1" placeholder="Inserire valore 1">
+                </div>
+                <div class="cls cls-1">
+                    <label>Operatore</label>
+                    <select class="slc-operatore crs-pointer">
+                        <optgroup label="Elenco operatori">
+                            <option value="nil" selected>Seleziona</option>
+                            <option value="*">Moltiplicazione</option>
+                            <option value="/">Divisione</option>
+                            <option value="+">Addizione</option>
+                            <option value="-">Sottrazione</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="cls cls-2">
+                    <label>Valore 2</label>
+                    <input type="number" class="input-val-2" placeholder="Inserire valore 2">
+                </div>
+                <div class="cls cls-8">
+                    <label>Operatore plus</label>
+                    <select class="slc-operatore-1 crs-pointer">
+                        <optgroup label="Elenco operatori">
+                            <option value="nil">Seleziona</option>
+                            <option value="null" selected>Lascia vuoto</option>
+                            <option value="*">Moltiplicazione</option>
+                            <option value="/">Divisione</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="cls cls-3">
+                    <label>Percentuale</label>
+                    <!--
+                    <select class="slc-percentuale crs-pointer">
+                        <optgroup label="Elenco percentuali" class="opt-percentuale"></optgroup>
+                    </select>
+                    -->
+                    <input type="number" class="input-percentuale" placeholder="Interi o decimali">
+                </div>
+                <div class="cls cls-4">
+                    <label>CALCOLA</label>
+                    <div class="fi-tooltip">
+                        <span class="fi-tooltiptext">Avvia equazione</span>
+                        <button class="btn btn-calcola crs-pointer" onclick="javascript:calcola()"></button>
+                    </div>
+                </div>
+                <div class="cls cls-5">
+                    <label>RIPRISTINA</label>
+                    <div class="fi-tooltip">
+                        <span class="fi-tooltiptext">Avvia ripristina</span>
+                        <button class="btn btn-ripristina crs-pointer" onclick="javascript:clearAll()"></button>
+                    </div>
+                </div>
+            </div><!-- ./grid-container -->
+            <div class="grid-container">
+                <div class="cls cls-1-1">
+                    <label>CALCOLA Q.TA' IMPASTO</label>
+                    <div class="fi-tooltip">
+                        <span class="fi-tooltiptext">Calcola</span>
+                        <button class="btn btn-calcola crs-pointer" onclick="javascript:calcolaImpasto()"></button>
+                    </div>
+                </div>
+            </div><!-- ./grid-container -->
+            <div class="result">
+                <div class="cls cls-6">
+                    <label><b style="color:var(--fi-utility)"><u>Equazione:</u></b></label>
+                    <div class="eq"></div>
+                </div>
+                <div class="cls cls-7">
+                    <label><b style="color:var(--fi-metanonord)"><u>Risultato:</u></b></label>
+                    <div class="rs"></div>
+                </div>
+            </div><!-- ./result -->
+            <div class="didascalia">
+                <div class="cls cls-9">
+                    <label><b style="color:var(--fi-utility)"><u>Spiegazione:</u></b></label>
+                    <br />
+                    <ul>
+                        <li>#1</li>
+                        <li>Se volessi sapere lo sconto di un articolo comprato,</li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li>devo fare in questo modo -></li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#2</li>
+                        <li>Se volessi la percentuale tra</li>
+                        <li>due valori esistenti,</li>
+                        <li>devo procedere in questo modo -></li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#3</li>
+                        <li>Se volessi la percentuale del valore mancante,</li>
+                        <li><b style='color:#2980b9;'>ma il valore esistente sia la %,</b></li>
+                        <li>del valore mancante,</li>
+                        <li>devo procedere in questo modo -></li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#3 secondo sistema</li>
+                        <li>Se volessi la percentuale del valore mancante,</li>
+                        <li><b style='color:#2980b9;'>ma il valore esistente sia la %,</b></li>
+                        <li>del valore mancante,</li>
+                        <li>devo procedere in questo modo -></li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#4</li>
+                        <li>Se volessi la percentuale del valore mancante,</li>
+                        <li><b style='color:#2980b9;'>ma il valore mancante è la %,</b></li>
+                        <li>del valore esistente,</li>
+                        <li>devo procedere in questo modo -></li>
+                    </ul>
+                    <br />
+                    <hr />
+                </div>
+                <div class="cls cls-10">
+                    <label><b style="color:var(--fi-metanonord)"><u>Equazione:</u></b></label>
+                    <br />
+                    <ul>
+                        <li>#1</li>
+                        <li>costo articolo 150€</li>
+                        <li>pagato 90€</li>
+                        <li>150 - 90 = 60€ euro di sconto</li>
+                        <li>(60/150) * 100 = 40% percentuale sconto</li>
+                        <li>(150/100) * 40% = 60€</li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#2</li>
+                        <li>valore più basso diviso valore più alto</li>
+                        <li>moltiplicato per 100</li>
+                        <li>(300/500) * 100 = 60%</li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#3</li>
+                        <li>valore esistente 300</li>
+                        <li>60% del valore mancante ma riferito <b style='color:#2980b9;'>non al</b></li>
+                        <li>valore eistente</li>
+                        <li>(300/60) * 100 = 500</li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#3 secondo sistema</li>
+                        <li>valore esistente 300</li>
+                        <li>60% del valore mancante ma riferito <b style='color:#2980b9;'>non al</b></li>
+                        <li>valore eistente</li>
+                        <li>(300*100) / 60 = 500</li>
+                    </ul>
+                    <br />
+                    <hr />
+                    <br />
+                    <ul>
+                        <li>#4</li>
+                        <li>valore esistente 500</li>
+                        <li>60% del valore mancante ma riferito <strong style='color:#2980b9;'>al</strong></li>
+                        <li>valore eistente</li>
+                        <li>(500/100) * 60 = 300</li>
+                    </ul>
+                    <br />
+                    <hr />
+                </div>
+            </div><!-- ./didascalia -->
+        </div><!-- ./wrapper -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="module" src="js/module.js"></script>
+        <script lang="javascript">
+            let full_screen = document.querySelector('.full-screen');
+            let my_alert = document.querySelector('.my-alert');
+            let val1 = document.querySelector('.input-val-1');
+            let val2 = document.querySelector('.input-val-2');
+            let slc0 = document.querySelector('.slc-operatore');
+            let slc1 = document.querySelector('.slc-operatore-1');
+            let scl_percentuali = document.querySelector('.slc-percentuale');
+            let opt_percentuali = document.querySelector('.opt-percentuale');
+            let val3 = document.querySelector('.input-percentuale');
+            let eq = document.querySelector('.eq');
+            let rs = document.querySelector('.rs');
+            var rows_p = new Number();
+            var bg_c = new String();
+            function cE(el) {
+                'use strict'
+                try {
+                    const create_element = document.createElement(el);
+                    return create_element;
+                } catch(err) {
+                    alert(`${err.name} ${err.message} ${new Error().lineNumber}`);
+                }
+            }
+            function createMessage(h, b, f, c) {
+                'use strict'
+                try {
+                    my_alert.innerHTML = "";
+                    let panel_header = cE('div');
+                    panel_header.classList.add('panel-header', c);
+                    panel_header.innerHTML = h;
+
+                    let panel_body = cE('div');
+                    panel_body.classList.add('panel-body');
+                    panel_body.innerHTML = b;
+
+                    let panel_footer = cE('div');
+                    panel_footer.classList.add('panel-footer', c);
+                    panel_footer.innerHTML = f;
+
+                    $(full_screen).fadeIn('slow');
+                    $(my_alert).fadeIn('slow');
+                    my_alert.style.setProperty('top', '50%');
+                    my_alert.style.setProperty('transition', '2s');
+                    my_alert.appendChild(panel_header);
+                    my_alert.appendChild(panel_body);
+                    my_alert.appendChild(panel_footer);
+                    my_alert.onclick = function(e) {
+                        $(full_screen).fadeOut('slow');
+                        my_alert.style.setProperty('top', '-50%');
+                        my_alert.style.setProperty('transition', '2s');
+                        $(my_alert).fadeOut('slow');
+                    }
+                } catch(err) {
+                    alert(`${err.name} ${err.message} ${new Error().lineNumber}`);
+                }
+            }// ./createMEssage()
+            // createMessage("H", "Questo è un messaggio di prova per verificare il my alert!!!<br />Stiamo lavorando per voi|||", "F", "panel-success");
+            function calcola() {
+                'use strict'
+                try {
+                    const slc_value = slc0.options[slc0.selectedIndex].value;
+                    const slc_value1 = slc1.options[slc1.selectedIndex].value;
+                    // scl_percentuali.options[scl_percentuali.selectedIndex].value;
+                    if( (val1.value != "") && (val2.value != "") && (slc_value != "nil") && (slc_value1 != "nil") ){
+                        if( (isNaN(val1.value.replace(",", "."))) || (isNaN(val2.value.replace(",", "."))) ) { // accetta numeri interi e decimali
+                        // if( (val1.value % 1 != 0) || (val2.value % 1 != 0) ) { // accetta solo numeri interi
+                            throw new Error("Compilare i campi con numeri interi o decimali.");
+                        } else {
+                            const v1 = parseFloat(val1.value.replace(",", "."));
+                            const v2 = parseFloat(val2.value.replace(",", "."));
+                            const v3 = (!isNaN(val3.value) ? parseFloat(val3.value.replace(",", ".")) : createMessage('ERORRE', 'Il valore % non è corretto', `Line: ${new Error().lineNumber}`, 'panel-danger'));
+                            var result = new Number();
+                            var add = new String();
+                            // console.info(v1, v2, v3);
+                            if(val3.value != "" && v3 != 0) {
+                                if(!v3) {
+                                    //throw new Error("here1")
+                                    return false;
+                                }
+                                if(v3>100) {
+                                    throw new Error("La percentuale non può essere maggiore di 100");
+                                }
+                            }// ./if(val3.value != "") {
+                            if(slc_value == "*") {
+                                if(val3.value != "") {
+                                    if(slc_value1 == "/") {
+                                        result = (v1 * v2) / v3;
+                                        add = "% o gr/ml";
+                                    } else {
+                                        result = (v1 * v2) * v3;
+                                        add = "gr/ml o %";
+                                    }
+                                } else {
+                                    result = (v1 * v2);
+                                }
+                            } else if(slc_value == "/") {
+                                if(val3.value != "") {
+                                    // console.info("//");
+                                    if(slc_value1 == "*") {
+                                        result = (v1 / v2) * v3;
+                                        add = "% o gr/ml";
+                                    } else {
+                                        result = (v1 / v2) / v3;
+                                        add = "gr/ml o %";
+                                    } 
+                                    /*
+                                    else {
+                                        throw new Error("Se l'operatore plus è vuoto, non posso eseguire questa equazione in %");
+                                    }
+                                    */
+                                } else {
+                                    result = (v1 / v2);
+                                }
+                            } else if(slc_value == "+") {
+                                if(slc_value1 == "*" && val3.value != "") {
+                                    result = (v1 + v2) * v3;
+                                    add = "€";
+                                } else if(slc_value1 == "/" && val3.value != "") {
+                                    result = (v1 + v2) / v3;
+                                    add = "€";
+                                } else {
+                                    result = (v1+v2);
+                                    add = "€";
+                                }
+                            } else if(slc_value == "-") {
+                                if(v1>=v2) {
+                                    if(slc_value1 == "*"  && val3.value != "") {
+                                        result = (v1 - v2) * v3;
+                                        add = "€";
+                                    } else if(slc_value1 == "/"  && val3.value != "") {
+                                        result = (v1-v2) / v3;
+                                        add = "€";
+                                    } else {
+                                        result = (v1-v2);
+                                        add = "€";
+                                    }
+                                } else {
+                                    throw new Error("Il valore 1 è inferiore al valore 2");
+                                }
+                            }
+                            // createMessage("Risultato", `Il risultato ottenuto è: ${(result).toFixed(2)}`, "Successfully", "panel-success");
+                            
+                            if(rows_p % 2 == 0) {
+                                bg_c = "background-color: var(--fi-az-0) ; color: var(--fi-graylight);";
+                            } else {
+                                bg_c = "background-color: var(--fi-az-1) ; color: var(--fi-graylight);";
+                            }
+                            eq.innerHTML += `<p style="${bg_c}">(${v1}${slc_value}${v2})${slc_value1}${v3}%</p>`;
+                            rs.innerHTML += `<p style="${bg_c}">${(result).toFixed(2)}${add}</p>`;
+                            rows_p++;
+                        }
+                    } else {
+                        throw new Error("Non hai compilato correttamente i valori.");
+                    }
+                } catch(err) {
+                    createMessage("ERRORE", `${err.message}`, `${err.name} ${new Error().lineNumber}`, "panel-danger");
+                }
+            }// ./calcola()
+            function populateSelectPercentuali() {
+                'use strict'
+                try {
+                    // throw new Error("MSG");
+                    for(var i =0; i<=100; i++) {
+                        let op = document.createElement('option');
+                        op.value=i;
+                        op.text=`${i}%`;
+                        opt_percentuali.appendChild(op);
+                    }
+                } catch(err) {
+                    createMessage("ERRORE", `${err.message} ${new Error().lineNumber}`, err.name, 'panel-danger');
+                }
+            }// populateSelectPercentuali()
+            // populateSelectPercentuali();
+            function clearAll() {
+                val1.value = "";
+                val2.value = "";
+                slc0.value = "nil";
+                slc1.value = "null";
+                val3.value = "";
+                eq.innerHTML = "";
+                rs.innerHTML = "";
+            }// ./clearAll()
+            val3.addEventListener('keyup', function(event) {
+                // console.info(event.keyCode);
+                if(event.keyCode === 13) {
+                    calcola();
+                }
+            })
+            async function calcolaImpasto() {
+                'use strict'
+                let tot_impasto = prompt("Scrivere il peso totale dell'impasto desiderato.\nSolo numeri interi:", "500");
+                if(tot_impasto) {
+                    if(tot_impasto % 1 != 0) {
+                        createMessage("AVVISO", 'Scrivere solo numeri interi non decimali.', '500', 'panel-primary');
+                        return false;
+                    } else {
+                            const idratazione = prompt("Scrivere l'idratazione desiderata.\nAl momento le scelte sono 2 (60 o 65) percento:", "60");
+                            if(idratazione) {
+                                if(idratazione % 1 != 0) {
+                                    createMessage("AVVISO", 'Scrivere solo numeri interi non decimali.', '500', 'panel-primary');
+                                    return false;
+                                } else {
+                                    if(idratazione != 60 && idratazione != 65) {
+                                        createMessage("AVVISO", 'Idratazione, al momento solo due scelte 60% o 65%', '500', 'panel-warning');
+                                        return false;
+                                    } else {
+                                    let procedure = Promise.resolve({
+                                        valore1: parseInt(tot_impasto),
+                                        valore2: parseInt(idratazione),
+                                        valore3: parseFloat(37.5),
+                                        valore4: parseFloat(39.5)
+                                    });
+                                
+                                    await Promise.all([procedure]).then((rs) => {
+                                        if(rs) {
+                                            return Promise.resolve(rs);
+                                        } else {
+                                            return Promise.reject({
+                                                code: rs.status,
+                                                message: rs.statusText,
+                                                details: "Ho riscontrato un errore" 
+                                            })
+                                        }
+                                    }).then((db) => {
+                                        // console.info(db[0].valore1)
+                                        var acqua = new Number();
+                                        if(db[0].valore2 === 60) {
+                                            acqua = parseFloat((db[0].valore1/100) * parseFloat(db[0].valore3));
+                                        } else if(db[0].valore2 === 65) {
+                                            acqua = parseFloat((db[0].valore1/100) * parseFloat(db[0].valore4));
+                                        } else {
+                                            createMessage("AVVISO", `Scrivere 60% o 65% di idratazione senza il %`, "500", 'panel-warning');
+                                        }
+                                        var farina = parseFloat((db[0].valore1 -  acqua));
+                                        var idratazione = parseFloat((acqua / farina) * 100);
+                                        /*
+                                        console.table({
+                                            acqua: acqua,
+                                            farina: farina,
+                                            idratazione: parseInt(idratazione)+"%"
+                                        })
+                                        */
+                                        createMessage("AVVISO", `Impasto totale: ${parseInt(db[0].valore1)} gr
+                                        <br />Acqua o Liquidi: ${parseFloat(acqua).toFixed(2)} ml
+                                        <br />Farina: ${parseFloat(farina).toFixed(2)} gr
+                                        <br />Idratazione: ${parseFloat(idratazione).toFixed(2)}%`, '545', 'panel-success')
+                                    }).catch((err) => {
+                                        if(err.code == null) {
+                                            createMessage("ERRORE", `${err.message} ${new Error().lineNumber}`, err.name, 'panel-danger');
+                                        } else {
+                                            createMessage("ERRORE", `${err.message} ${new Error().lineNumber}`, err.code, 'panel-danger');
+                                        }
+                                    })
+                                }// ./else figlio di if(idratazione != 60 || idratazione != 65) {
+                            }// ./else figlio diif(idratazione % 1 != 0) {
+                        }// ./if idratazione
+                    }// ./else figlio di if(tot_impasto % 1 != 0) {
+                }// ./if tot_impasto
+            }// ./calcolaImpasto()
+        </script>
+    </body>
+</htm>
